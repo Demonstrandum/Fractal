@@ -3,6 +3,7 @@ Gem::Specification.new do |s|
   s.version     = '0.1.3'
   s.required_ruby_version = '>= 1.9.2'
   s.executables << 'fractal'
+  s.add_runtime_dependency 'chunky_png', '~> 1.3', '>= 1.3.8'
   s.date        = '2017-06-13'
   s.summary     = "Draws fractal PNG images."
   s.description = "Creates PNG images of fractals."
