@@ -34,10 +34,10 @@ fractal = (
     Fractals::Mandelbrot.new png
   end
 )
-fractal.colorMode = 'mono'
+fractal.colorType = 'mono'
 # TODO: Use colorMode option for multichromatic images.
-fractal.colorMode = args['color'] if args.key? 'color' # --color=mono
-fractal.colorMode = args['mode'] if args.key? 'mode' # --mode=mono
+fractal.colorType = args['color'] if args.key? 'color' # --color=mono
+fractal.colorType = args['mode'] if args.key? 'mode' # --mode=mono
 
 definition, scale = 255, 2
 definition = args['def'].to_i if args.key? 'def' # --def=100

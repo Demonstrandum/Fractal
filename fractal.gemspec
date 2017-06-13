@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name        = 'fractal'
-  s.version     = '0.1.2'
+  s.version     = '0.1.3'
   s.required_ruby_version = '>= 1.9.2'
   s.executables << 'fractal'
   s.date        = '2017-06-13'
