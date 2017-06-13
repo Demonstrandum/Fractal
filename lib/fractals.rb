@@ -28,8 +28,11 @@ module Fractals
           break
         end
       end
+      bright = drag(snap, 0, definition, 0, 1)
+      bright = drag(sqrt(bright), 0, 1, 0, 255)
+      bright = 0 if snap == definition
 
-      return [drag(snap, 0, definition, 0, 255)] * 3
+      return [bright] * 3
     end
   end
 end
