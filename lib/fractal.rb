@@ -11,7 +11,7 @@ module Fractals
   I = Complex 'i'
 
   class Mandelbrot
-    attr_accessor :colorMode
+    attr_accessor :colorType
 
     def initialize image
       @width, @height = image.width, image.height
@@ -20,7 +20,7 @@ module Fractals
 
     def calculate a, b, c_arr
       ca, cb = c_arr
-      left  = a * a - b * b
+      left = a * a - b * b
       right = 2 * a * b
       a = left  + ca
       b = right + cb
@@ -28,7 +28,7 @@ module Fractals
       return [a, b]
     end
 
-    def draw definition=100, scale=2
+    def draw definition=255, scale=2
       scaleWidth  = scale.to_f
       scaleHeight = scale.to_f * (@height.to_f / @width.to_f)
       definition = definition.to_f
@@ -45,6 +45,8 @@ module Fractals
             end
             snap += 1
           end
+          # TODO: Use colorType as option non-monochromatic images
+          #       (allow colourful fractals), currently only greyscale
           shade = drag(snap, 0, definition, 0, 1)
           shade = drag(Math.sqrt(shade), 0, 1, 0, 255)
 
