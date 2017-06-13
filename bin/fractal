@@ -1,8 +1,45 @@
 #!/usr/bin/env ruby
 require 'fractal'
 
-png = ChunkyPNG::Image.new ARGV[0].to_i, ARGV[1].to_i
-fractal = Fractals::Mandelbrot.new png
-fractal.colorMode = 'rgb'
+fractals = ['mandelbrot']
+fractalType = String.new
 
-fractal.draw(ARGV[2].to_i, ARGV[3].to_i).save('mandelbrot-fractal.png')
+ARGV.each do |arg|
+  fractals.each do |option|
+    fractalType = arg.downcase if arg.downcase == option
+  end
+end
+
+if fractalType.empty?
+  puts "Please provide a fractal type."
+  exit 1
+end
+
+width = height = 0
+args = Hash[ARGV.join(' ').scan(/--?([^=\s]+)(?:=(\S+))?/)]
+width  = args['w'].to_i if args.key? 'w' # -w=2000
+height = args['h'].to_i if args.key? 'h' # -h=1500
+
+if width <= 0 || height <= 0
+  puts "Warning, width and/or height not provided.\nSetting to default: 300x300"
+  width = height = 300
+end
+
+png = ChunkyPNG::Image.new width, height
+fractal = (
+  case fractalType
+  when 'mandelbrot'
+    Fractals::Mandelbrot.new png
+  else
+    Fractals::Mandelbrot.new png
+  end
+)
+fractal.colorMode = 'rgb'
+fractal.colorMode = args['color'] if args.key? 'color' # --color=rgb
+fractal.colorMode = args['mode'] if args.key? 'mode' # --mode=rgb
+
+definition, scale = 255, 2
+definition = args['def'].to_i if args.key? 'def' # --def=100
+scale = args['scale'].to_i if args.key? 'scale'  # --scale=1.5
+
+fractal.draw(definition, scale).save("#{fractalType}-fractal.png")
