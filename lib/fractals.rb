@@ -1,48 +1,57 @@
 require 'chunky_png'
-
+def drag pos, pos_min, pos_max, out_min, out_max
+  return (
+    (pos - pos_min) * (out_max - out_min) /
+    (pos_max - pos_min) + out_min
+  )
+end
 module Fractals
   I = Complex 'i'
-  def drag pos, pos_min, pos_max, out_min, out_max
-    return (pos - pos_min) * (out_max - out_min) / (pos_max - pos_min) + out_min;
-  end
 
   class Mandelbrot
-    def initialize x, y
-      @widh, @height = x, y
+    attr_accessor :colorMode
+
+    def initialize image
+      @width, @height = image.width, image.height
+      @image = image
     end
 
-    def draw x, y, scale=2, definition=100, type='rgb', colour='mono'
-      a = ca = drag(x, 0, @width,  -scale, scale)
-      b = cb = drag(y, 0, @height, -scale, scale)
+    def draw definition=100, scale=2
+      scale = scale.to_f
+      definition = definition.to_f
+      (0..@width - 1).each do |x|
+        (0..@height - 1).each do |y|
+          a = ca = drag(x, 0, @width,  -scale, scale)
+          b = cb = drag(y, 0, @height, -scale, scale)
 
-      z = 0
-      snap = 0
-      (1..definition).each do |n|
-        left  = (a**2 - b**2)
-        right = 2 * a * b
-        a = left  + ca
-        b = right + cb
+          snap = 0
+          while snap < definition
+            left  = a * a - b * b
+            right = 2 * a * b
+            a = left  + ca
+            b = right + cb
 
-        if a + b > 16
-          snap += n
-          break
+            if a * a + b * b > 16
+              break
+            end
+            snap += 1
+          end
+          shade = drag(snap, 0, definition, 0, 1)
+          shade = drag(Math.sqrt(shade), 0, 1, 0, 255)
+
+          colours = [shade.round.to_i] * 3
+          hex = String.new
+          colours.each { |component| hex << component.to_s(16) }
+          @image[x, y] = ChunkyPNG::Color.from_hex hex
         end
       end
-      bright = drag(snap, 0, definition, 0, 1)
-      bright = drag(sqrt(bright), 0, 1, 0, 255)
-      bright = 0 if snap == definition
-
-      return [bright] * 3
+      return @image
     end
   end
 end
 
 png = ChunkyPNG::Image.new ARGV[0].to_i, ARGV[1].to_i
-fractal = Fractals::Mandelbrot.new png.width, png.height
-(0..png.width - 1).each do |x|
-  (0..png.height - 1).each do |y|
-    r, g, b = fractal.draw x, y
-    png[x][y] = ChunkyPNG::Colour.form_rgb r, g, b
-  end
-end
-png.save('mandelbrot-fractal.png')
+fractal = Fractals::Mandelbrot.new png
+fractal.colorMode = 'rgb'
+
+fractal.draw(ARGV[2].to_i, ARGV[3].to_i).save('mandelbrot-fractal.png')
