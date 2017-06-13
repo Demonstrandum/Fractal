@@ -1,0 +1,8 @@
+#!/usr/bin/env ruby
+require 'fractal'
+
+png = ChunkyPNG::Image.new ARGV[0].to_i, ARGV[1].to_i
+fractal = Fractals::Mandelbrot.new png
+fractal.colorMode = 'rgb'
+
+fractal.draw(ARGV[2].to_i, ARGV[3].to_i).save('mandelbrot-fractal.png')
