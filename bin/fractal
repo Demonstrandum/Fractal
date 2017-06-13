@@ -1,5 +1,32 @@
 #!/usr/bin/env ruby
 require 'fractal'
+args = Hash[ARGV.join(' ').scan(/--?([^=\s]+)(?:=(\S+))?/)]
+if args.key?('h') || args.key?('help')
+  help = <<EOF
+
+`fractal` command-line arguments:
+
+  -  `-w=`, the pixel width of the output image.
+     (Defaults to 300), e.g. `-w=500`
+  -  `-h=`, the pixel height of the output image.
+     (Defaults to 300), e.g. `-h=240`
+  -  `--def=`, (optional), the 'definition' of the image,
+     the amount of calculations performed. e.g. `--def=255`
+  -  `--scale=`, (optional), the zoom level of the image,
+     a higher value corresponds to a taller imaginary number line
+     thus a smaller fractal is seen. e.g. `--scale=2.25`
+  -  Last but not least, (required), the type of fractal drawn.
+     This argument is composed of just the fractal's name,
+     put at any position in your list of arguments.
+     e.g. `mandelbrot`
+
+An example command is:
+`fractal -w=400 -h=320 mandelbrot --scale=2 --def=100`
+
+EOF
+  puts help
+  exit 0
+end
 
 fractals = ['mandelbrot']
 fractalType = String.new
@@ -16,7 +43,6 @@ if fractalType.empty?
 end
 
 width = height = 0
-args = Hash[ARGV.join(' ').scan(/--?([^=\s]+)(?:=(\S+))?/)]
 width  = args['w'].to_i if args.key? 'w' # -w=2000
 height = args['h'].to_i if args.key? 'h' # -h=1500
 
