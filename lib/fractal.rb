@@ -18,21 +18,28 @@ module Fractals
       @image = image
     end
 
+    def calculate a, b, c_arr
+      ca, cb = c_arr
+      left  = a * a - b * b
+      right = 2 * a * b
+      a = left  + ca
+      b = right + cb
+
+      return [a, b]
+    end
+
     def draw definition=100, scale=2
-      scale = scale.to_f
+      scaleWidth  = scale.to_f
+      scaleHeight = scale.to_f * (@height.to_f / @width.to_f)
       definition = definition.to_f
       (0..@width - 1).each do |x|
         (0..@height - 1).each do |y|
-          a = ca = drag(x, 0, @width,  -scale, scale)
-          b = cb = drag(y, 0, @height, -scale, scale)
+          a = ca = drag(x, 0, @width,  -scaleWidth, scaleWidth)
+          b = cb = drag(y, 0, @height, -scaleHeight, scaleHeight)
 
           snap = 0
           while snap < definition
-            left  = a * a - b * b
-            right = 2 * a * b
-            a = left  + ca
-            b = right + cb
-
+            a, b = calculate(a, b, [ca, cb])
             if a * a + b * b > 16
               break
             end
