@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name        = 'fractal'
-  s.version     = '0.1.7'
+  s.version     = '0.1.8'
   s.required_ruby_version = '>= 1.9.2'
   s.executables << 'fractal'
   s.add_runtime_dependency 'chunky_png', '~> 1.3', '>= 1.3.8'
