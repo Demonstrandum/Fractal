@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 require 'fractal'
 args = Hash[ARGV.join(' ').scan(/--?([^=\s]+)(?:=(\S+))?/)]
-if args.key?('h') || args.key?('help')
+if args.key?('help')
   help = <<EOF
 
 `fractal` command-line arguments:
@@ -38,7 +38,7 @@ ARGV.each do |arg|
 end
 
 if fractalType.empty?
-  puts "Please provide a fractal type."
+  puts "Error: Please provide a fractal type."
   exit 1
 end
 
@@ -51,6 +51,20 @@ if width <= 0 || height <= 0
   width = height = 300
 end
 
+ca = cb = nil
+if args.key? 'complex'
+  complex = args['complex']
+  ca, cb = complex.split(/(?=[+\-])/)
+  ca = ca.to_f
+  cb.delete! "i"
+  cb = cb.to_f
+end
+
+if fractalType == 'julia' && (ca.nil? || cb.nil?)
+  puts "Error: fractal type: '#{fractalType}' requires complex coordinate,\n in form of '±c₁±c₂i', for example: -0.416+0.8i"
+  exit 1
+end
+
 png = ChunkyPNG::Image.new width, height
 fractal = (
   case fractalType
@@ -60,8 +74,7 @@ fractal = (
     Fractals::Mandelbrot.new png
   end
 )
-fractal.colorType = 'mono'
-# TODO: Use colorMode option for multichromatic images.
+
 fractal.colorType = args['color'] if args.key? 'color' # --color=mono
 fractal.colorType = args['mode'] if args.key? 'mode' # --mode=mono
 

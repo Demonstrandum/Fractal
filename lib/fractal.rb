@@ -45,15 +45,22 @@ module Fractals
             end
             snap += 1
           end
-          # TODO: Use colorType as option non-monochromatic images
-          #       (allow colourful fractals), currently only greyscale
-          shade = drag(snap, 0, definition, 0, 1)
-          shade = drag(Math.sqrt(shade), 0, 1, 0, 255)
 
-          colours = [shade.round.to_i] * 3
-          hex = String.new
-          colours.each { |component| hex << component.to_s(16) }
-          @image[x, y] = ChunkyPNG::Color.from_hex hex
+          case @colorType
+          when 'multichromatic', 'multi', 'rainbow'
+            brightness = 1
+            brightness = 0 if snap == definition
+            hue = drag(snap, 0, definition, 0, 1)
+            hue = drag(Math.sqrt(hue), 0, 1, 0, 360)
+
+            @image[x, y] = ChunkyPNG::Color.from_hsv hue, 1, brightness
+          else
+            shade = drag(snap, 0, definition, 0, 1)
+            shade = drag(Math.sqrt(shade), 0, 1, 0, 255)
+            r, g, b = [shade.round.to_i] * 3
+
+            @image[x, y] = ChunkyPNG::Color.rgb r, g, b
+          end
         end
       end
       return @image
