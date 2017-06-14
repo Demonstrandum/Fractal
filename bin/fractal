@@ -16,6 +16,9 @@ if args.key? 'help' || help.nil?
      the image in colour or monochromatically,
      e.g. `--color=mono` or `--color=multi`
      which is the same as `--color=rainbow`
+  -  `-o=`, (*optional*) is the location in which to save
+     your image, the `-o=` part is not required if you
+     just write the file location with a `.png` at the end.
   -  `--def=`, (optional), the 'definition' of the image,
      the amount of calculations performed or iterations of the formula. e.g. `--def=100`
   -  `--scale=`, (optional), the zoom level of the image,
