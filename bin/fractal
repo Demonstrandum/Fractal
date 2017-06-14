@@ -2,8 +2,7 @@
 require 'fractal'
 args = Hash[ARGV.join(' ').scan(/--?([^=\s]+)(?:=(\S+))?/)]
 
-help = args['h'] if args.key? 'h'
-if args.key? 'help' || help.nil?
+if args.key? 'help'
   help = <<EOF
 
 `fractal` command-line arguments:
@@ -20,7 +19,8 @@ if args.key? 'help' || help.nil?
      your image, the `-o=` part is not required if you
      just write the file location with a `.png` at the end.
   -  `--def=`, (optional), the 'definition' of the image,
-     the amount of calculations performed or iterations of the formula. e.g. `--def=100`
+     the amount of calculations performed or iterations of
+     the formula. e.g. `--def=100` for 100 iterations.
   -  `--scale=`, (optional), the zoom level of the image,
      a higher value corresponds to a taller imaginary number line
      thus a smaller fractal is seen. e.g. `--scale=2.25`
@@ -34,8 +34,9 @@ if args.key? 'help' || help.nil?
      put at any position in your list of arguments.
      e.g. `mandelbrot` or `julia`
 
-An example command is:
-`fractal -w=400 -h=320 mandelbrot --scale=2 --def=100`
+Example commands:
+`fractal ~/my_fractal.png -w=500 -h=310 --scale=2.92 --def=100 mandelbrot --color=mono`
+`fractal julia -w=600 -h=600 --color=multi --complex=-0.8+0.156i --def=100 --scale=1.5 -o=../my_fractal`
 
 EOF
   puts help
@@ -62,7 +63,7 @@ end
 
 
 if fractalType.empty?
-  puts "Error: Please provide a fractal type."
+  puts "Error: Please provide a fractal type.\nType `fractal --help` for help."
   exit 1
 end
 
