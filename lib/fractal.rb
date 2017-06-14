@@ -28,8 +28,8 @@ module Fractals
       return [a, b]
     end
 
-    def draw definition=255, scale=2
-      scaleWidth  = scale.to_f
+    def draw definition=255, scale=2.0
+      scaleWidth  = scale
       scaleHeight = scale.to_f * (@height.to_f / @width.to_f)
       definition = definition.to_f
       (0..@width - 1).each do |x|
@@ -66,4 +66,18 @@ module Fractals
       return @image
     end
   end
+
+  class Julia < Mandelbrot # Since the Julia set only has a slightly modified calculation
+    attr_accessor :real
+    attr_accessor :complex
+
+    def calculate a, b, c_arr # c_arr is irrelevant as c is now constant, however the draw() still supplies it and I don't want to rewrite draw when it already exists. 
+      left = a * a - b * b
+      right = 2 * a * b
+      a = left  + @real    # z^2 + c
+      b = right + @complex # but here the c is constant, composed of a real and imaginary part in form of a±bi where a and b have been separated and labeled here as real and complex
+      return [a, b]
+    end
+  end
+  # module space
 end
