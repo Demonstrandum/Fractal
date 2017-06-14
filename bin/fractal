@@ -10,15 +10,24 @@ if args.key?('help')
      (Defaults to 300), e.g. `-w=500`
   -  `-h=`, the pixel height of the output image.
      (Defaults to 300), e.g. `-h=240`
+  -  `--color=`, (Defaults to mono), allows you to draw
+     the image in colour or monochromatically,
+     e.g. `--color=mono` or `--color=multi`
+     which is the same as `--color=rainbow`
   -  `--def=`, (optional), the 'definition' of the image,
-     the amount of calculations performed. e.g. `--def=255`
+     the amount of calculations performed or iterations of the formula. e.g. `--def=100`
   -  `--scale=`, (optional), the zoom level of the image,
      a higher value corresponds to a taller imaginary number line
      thus a smaller fractal is seen. e.g. `--scale=2.25`
+  -  `--complex=` (*only needed for the Julia set*)
+     this sets a complex coordinate for the Julia set,
+     in the form of `a±bi` ('a' and 'b' real numbers and
+     'i' is the square root of -1 which can take on all
+     values in the complex plane), e.g. '-0.8+0.4i'
   -  Last but not least, (required), the type of fractal drawn.
      This argument is composed of just the fractal's name,
      put at any position in your list of arguments.
-     e.g. `mandelbrot`
+     e.g. `mandelbrot` or `julia`
 
 An example command is:
 `fractal -w=400 -h=320 mandelbrot --scale=2 --def=100`
@@ -28,11 +37,11 @@ EOF
   exit 0
 end
 
-fractals = ['mandelbrot']
+allowedFractals = ['mandelbrot', 'julia']
 fractalType = String.new
 
 ARGV.each do |arg|
-  fractals.each do |option|
+  allowedFractals.each do |option|
     fractalType = arg.downcase if arg.downcase == option
   end
 end
@@ -66,20 +75,24 @@ if fractalType == 'julia' && (ca.nil? || cb.nil?)
 end
 
 png = ChunkyPNG::Image.new width, height
-fractal = (
-  case fractalType
-  when 'mandelbrot'
-    Fractals::Mandelbrot.new png
-  else
-    Fractals::Mandelbrot.new png
-  end
-)
+
+case fractalType
+when 'mandelbrot'
+  fractal = Fractals::Mandelbrot.new png
+when 'julia'
+  fractal = Fractals::Julia.new png
+  fractal.real = ca
+  fractal.complex = cb
+else
+  fractal = Fractals::Mandelbrot.new png
+end
+
 
 fractal.colorType = args['color'] if args.key? 'color' # --color=mono
 fractal.colorType = args['mode'] if args.key? 'mode' # --mode=mono
 
-definition, scale = 255, 2
+definition, scale = 255, 2.0
 definition = args['def'].to_i if args.key? 'def' # --def=100
-scale = args['scale'].to_i if args.key? 'scale'  # --scale=1.5
+scale = args['scale'].to_f if args.key? 'scale'  # --scale=1.5
 
 fractal.draw(definition, scale).save("#{fractalType}-fractal.png")
