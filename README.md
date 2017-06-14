@@ -23,6 +23,7 @@ The current command-line arguments possible are:
   - `-w=`, the pixel width of the output image. (*Defaults to 300*), e.g. `-w=500`
   - `-h=`, the pixel height of the output image. (*Defaults to 300*), e.g. `-h=240`
   - `--color=`, (*Defaults to mono*), allows you to draw the image in colour or monochromatically, e.g. `--color=mono` or `--color=multi` which is the same as `--color=rainbow`
+  - `-o=`, (*optional*) is the location in which to save your image, the `-o=` part is not required if you just write the file location with a `.png` at the end.
   - `--def=`, (*optional*), the 'definition' of the image, the amount of calculations performed or iterations to the formula. e.g. `--def=100`
   - `--scale=`, (*optional*), the *zoom* level of the image, a higher value corresponds to a taller *imaginary* number line thus a smaller fractal is seen. e.g. `--scale=2.25`
   - `--complex=` (*only needed for the Julia set*) this sets a complex coordinate for the Julia set, in the form of `a±bi` (a and b real numbers and i is the square root of -1 which can take on all values in the complex plane), e.g. `-0.8+0.4i`
