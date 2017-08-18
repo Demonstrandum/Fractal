@@ -98,7 +98,7 @@ when 'mandelbrot'
 when 'julia'
   fractal = Fractals::Julia.new png
   fractal.real = ca
-  fractal.complex = cb
+  fractal.imaginary = cb
 else
   fractal = Fractals::Mandelbrot.new png
 end
