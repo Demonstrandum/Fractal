@@ -69,7 +69,7 @@ module Fractals
 
   class Julia < Mandelbrot # Since the Julia set only has a slightly modified calculation
     attr_accessor :real
-    attr_accessor :complex
+    attr_accessor :imaginary
 
     def calculate a, b, c_arr # c_arr is irrelevant as c is now constant, however the draw() still supplies it and I don't want to rewrite draw when it already exists. 
       left = a * a - b * b
