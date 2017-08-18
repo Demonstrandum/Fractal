@@ -74,8 +74,8 @@ module Fractals
     def calculate a, b, c_arr # c_arr is irrelevant as c is now constant, however the draw() still supplies it and I don't want to rewrite draw when it already exists. 
       left = a * a - b * b
       right = 2 * a * b
-      a = left  + @real    # z^2 + c
-      b = right + @complex # but here the c is constant, composed of a real and imaginary part in form of a±bi where a and b have been separated and labeled here as real and complex
+      a = left  + @real      # z^2 + c
+      b = right + @imaginary # but here the c is constant, composed of a real and imaginary part in form of a±bi where a and b have been separated and labeled here as real and imaginary
       return [a, b]
     end
   end
