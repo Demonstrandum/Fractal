@@ -8,8 +8,6 @@ def drag pos, pos_min, pos_max, out_min, out_max
 end # drag(x, x_min_val, x_max_val, mapped_to_min_val, mapped_to_max_val), the same as the popular map(...) function.
 
 module Fractals
-  I = Complex 'i'
-
   class Mandelbrot
     attr_accessor :colorType
 
