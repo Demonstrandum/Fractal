@@ -24,6 +24,13 @@ if args.key? 'help'
   -  `--scale=`, (optional), the zoom level of the image,
      a higher value corresponds to a taller imaginary number line
      thus a smaller fractal is seen. e.g. `--scale=2.25`
+  -  `--offset=x,y` (optional), the offset will make you able
+     to position yourself where you like on the plan.
+     (offsetting where the centre is, before (0,0) was
+     the centre of the image, but now your offset is the centre).
+     Make sure you give an x and y value as numerics,
+     (ints and floats work both and don't leave any spaces
+     between the comma).
   -  `--complex=` (*only needed for the Julia set*)
      this sets a complex coordinate for the Julia set,
      in the form of `a±bi` ('a' and 'b' real numbers and
@@ -43,13 +50,13 @@ EOF
   exit 0
 end
 
-allowedFractals = ['mandelbrot', 'julia']
-fractalType = String.new
+allowed_fractals = ['mandelbrot', 'julia']
+fractal_type = String.new
 
 o = String.new
 ARGV.each do |arg|
-  allowedFractals.each do |option|
-    fractalType = arg.downcase if arg.downcase == option
+  allowed_fractals.each do |option|
+    fractal_type = arg.downcase if arg.downcase == option
   end
 
   o = arg if arg[arg.length - 4, 4].downcase == '.png'
@@ -62,7 +69,7 @@ if o.include? '~'
 end
 
 
-if fractalType.empty?
+if fractal_type.empty?
   puts "Error: Please provide a fractal type.\nType `fractal --help` for help."
   exit 1
 end
@@ -85,14 +92,14 @@ if args.key? 'complex'
   cb = cb.to_f
 end
 
-if fractalType == 'julia' && (ca.nil? || cb.nil?)
-  puts "Error: fractal type: '#{fractalType}' requires complex coordinate,\n in form of '±c₁±c₂i', for example: -0.416+0.8i"
+if fractal_type == 'julia' && (ca.nil? || cb.nil?)
+  puts "Error: fractal type: '#{fractal_type}' requires complex coordinate,\n in form of '±c₁±c₂i', for example: -0.416+0.8i"
   exit 1
 end
 
 png = ChunkyPNG::Image.new width, height
 
-case fractalType
+case fractal_type
 when 'mandelbrot'
   fractal = Fractals::Mandelbrot.new png
 when 'julia'
@@ -104,16 +111,18 @@ else
 end
 
 
-fractal.colorType = args['color'] if args.key? 'color' # --color=mono
-fractal.colorType = args['mode'] if args.key? 'mode' # --mode=mono
+fractal.colouring = args['color'] if args.key? 'color' # --color=mono
+fractal.colouring = args['mode'] if args.key? 'mode' # --mode=mono
 
 definition, scale = 255, 2.0
 definition = args['def'].to_i if args.key? 'def' # --def=100
 scale = args['scale'].to_f if args.key? 'scale'  # --scale=1.5
+offset = [0, 0]
+offset = args['offset'].split(',').map(&:to_f) if args.key? 'offset'
 
 unless o.empty?
-  fractal.draw(definition, scale).save(o)
+  fractal.draw(definition, scale, offset).save(o)
   exit 0
 end
 
-fractal.draw(definition, scale).save("#{fractalType}-fractal.png")
+fractal.draw(definition, scale, offset).save("#{fractal_type}-fractal.png")
