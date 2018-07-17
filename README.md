@@ -44,8 +44,8 @@ For the Mandelbrot set:
 fractal -w=400 -h=320 --color=multi mandelbrot --scale=2 --def=200
 ```
 
-#### Offser & Zoom
-Using some of our offset argument, we can get to some very pretty places...
+#### Offset & Zoom
+Using our offset argument, we can get to some very pretty places...
 
 ```
 fractal mandelbrot --offset=-0.7463,0.1102 --scale=0.005 --def=1000 -o=close_1.png
